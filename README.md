@@ -1,7 +1,9 @@
 # Overview
 This repository contains a React frontend, and an Express backend that the frontend connects to.
+# Architecture
+![codechallenge draw drawio](https://user-images.githubusercontent.com/97837753/181680660-a486ced7-8f41-478e-b28f-506d0b79f5bc.png)
 
-# Objective
+
 Deploy the frontend and backend to somewhere publicly accessible over the internet. The AWS Free Tier should be more than sufficient to run this project, but you may use any platform and tooling you'd like for your solution.
 
 Fork this repo as a base. You may change any code in this repository to suit the infrastructure you build in this code challenge.
