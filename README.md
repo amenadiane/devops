@@ -33,12 +33,13 @@ This repository contains the necessary configuration for deploying a CI/CD pipel
  
  Write an appspec.yml with all the instruction for deploying our code. We used three scripts to achieve our goal:
  
+ 
 * install.sh -> this script will install globally node and all the utilities needed
+
 
   #add nodejs to yum
 #curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
 #yum install nodejs -y #default-jre ImageMagick
-
 #Install NVM package manager for manager separate versions of nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
@@ -60,6 +61,7 @@ rm -rf fontend
 
 * run.sh -> this script will start the backend and frontend in the given order as the frontend depends on the backend
 
+
 #!/usr/bin/env bash
 
 cd /home/ec2-user/backend
@@ -74,6 +76,7 @@ pm2 start "npm start"
 
 #!/usr/bin/env bash
 sleep 10
+
 # validating that the host is up on 8080
 nc -zv 127.0.0.1 8080
 
