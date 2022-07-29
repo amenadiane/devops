@@ -34,26 +34,26 @@ This repository contains the necessary configuration for deploying a CI/CD pipel
  Write an appspec.yml with all the instruction for deploying our code. We used three scripts to achieve our goal:
  
 * install.sh -> this script will install globally node and all the utilities needed
- 
- # add nodejs to yum
-# curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
-# yum install nodejs -y #default-jre ImageMagick
 
-# Install NVM package manager for manager separate versions of nodejs
+  #add nodejs to yum
+#curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+#yum install nodejs -y #default-jre ImageMagick
+
+#Install NVM package manager for manager separate versions of nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
 
-# Install node 14
+#Install node 14
 nvm install 14
 
-# install pm2 module globaly
+#install pm2 module globaly
 npm install -g pm2
 pm2 update
 
-# install nc utility
+#install nc utility
 yum install nc -y
 
-# delete existing bundle
+#delete existing bundle
 cd /home/ec2-user
 rm -rf backend
 rm -rf fontend
