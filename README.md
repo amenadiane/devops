@@ -1,59 +1,113 @@
-# Overview
-This repository contains a React frontend, and an Express backend that the frontend connects to.
+# FEATHER-REACT-APP
 
-# Objective
-Deploy the frontend and backend to somewhere publicly accessible over the internet. The AWS Free Tier should be more than sufficient to run this project, but you may use any platform and tooling you'd like for your solution.
+Feather react app
 
-Fork this repo as a base. You may change any code in this repository to suit the infrastructure you build in this code challenge.
+# OVERVIEW
 
-# Submission
-1. A github repo that has been forked from this repo with all your code.
-2. Modify this README file with instructions for:
-* Any tools needed to deploy your infrastructure
-* All the steps needed to repeat your deployment process
-* URLs to the your deployed frontend.
+This repository contains the necessary configuration for deploying a CI/CD pipeline in AWS for deploying a React frontend app, and an Express backend that the frontend connects to.
 
-# Evaluation
-You will be evaluated on the ease to replicate your infrastructure. This is a combination of quality of the instructions, as well as any scripts to automate the overall setup process.
+# ARCHITECTURE
+![codechallenge draw drawio](https://user-images.githubusercontent.com/97837753/181680660-a486ced7-8f41-478e-b28f-506d0b79f5bc.png)
 
-# Setup your environment
-Install nodejs. Binaries and installers can be found on nodejs.org.
-https://nodejs.org/en/download/
+# SOLUTION
 
-For macOS or Linux, Nodejs can usually be found in your preferred package manager.
-https://nodejs.org/en/download/package-manager/
+**1. Setup CLOUDFORMATION template for preparing an Amazon Linux 2 EC2 instance on which we will install CodeDeploy agent. We will use Cloudformation to deploy the EC2 instance with the user-data script below:**
 
-Depending on the Linux distribution, the Node Package Manager `npm` may need to be installed separately.
+          yum update -y
+          yum install ruby -y
+          yum install wget -y
+          cd /home/ec2-user
+          wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
+          chmod +x ./install
+          ./install auto
+        
+ Create Cloudformation stack using AWS CLI
+ 
+ aws cloudformation create-stack --stack-name Cloudformation-code-challenge --template-body file://application-team-instance.yml
+ 
+ Once the server is up - check the status of the codeDeploy agent
+ 
+ sudo service codedeploy-agent status
+ 
+ 
+ **2. Setup CODEDEPLOY for deploying our project onto our EC2 instance**
+ 
+ Write an appspec.yml with all the instruction for deploying our code. We used three scripts to achieve our goal:
+ 
+ 
+* install.sh -> this script will install globally node and all the utilities needed
 
-# Running the project
-The backend and the frontend will need to run on separate processes. The backend should be started first.
-```
-cd backend
+
+#add nodejs to yum
+#curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
+#yum install nodejs -y #default-jre ImageMagick
+
+#Install NVM package manager for manager separate versions of nodejs
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+
+#Install node 14
+nvm install 14
+
+#install pm2 module globaly
+npm install -g pm2
+pm2 update
+
+#install nc utility
+yum install nc -y
+
+#delete existing bundle
+cd /home/ec2-user
+rm -rf backend
+rm -rf fontend
+
+
+* run.sh -> this script will start the backend and frontend in the given order as the frontend depends on the backend
+
+
+
+#!/usr/bin/env bash
+
+cd /home/ec2-user/backend
 npm ci
-npm start
-```
-The backend should response to a GET request on `localhost:8080`.
+pm2 start index.js
 
-With the backend started, the frontend can be started.
-```
-cd frontend
+cd /home/ec2-user/frontend
 npm ci
-npm start
-```
-The frontend can be accessed at `localhost:3000`. If the frontend successfully connects to the backend, a message saying "SUCCESS" followed by a guid should be displayed on the screen.  If the connection failed, an error message will be displayed on the screen.
+pm2 start "npm start"
 
-# Configuration
-The frontend has a configuration file at `frontend/src/config.js` that defines the URL to call the backend. This URL is used on `frontend/src/App.js#12`, where the front end will make the GET call during the initial load of the page.
 
-The backend has a configuration file at `backend/config.js` that defines the host that the frontend will be calling from. This URL is used in the `Access-Control-Allow-Origin` CORS header, read in `backend/index.js#14`
+* validate.sh -> this script will validate whether the app is up on port 8080
 
-# Optional Extras
-The core requirement for this challenge is to get the provided application up and running for consumption over the public internet. That being said, there are some opportunities in this code challenge to demonstrate your skill sets that are above and beyond the core requirement.
 
-A few examples of extras for this coding challenge:
-1. Dockerizing the application
-2. Scripts to set up the infrastructure
-3. Providing a pipeline for the application deployment
-4. Running the application in a serverless environment
 
-This is not an exhaustive list of extra features that could be added to this code challenge. At the end of the day, this section is for you to demonstrate any skills you want to show that’s not captured in the core requirement.
+#!/usr/bin/env bash
+sleep 10
+#validating that the host is up on 8080
+nc -zv 127.0.0.1 8080
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+
+**3.Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2**
+
+
+#**VALIDATION**
+
+URL
+
+<img width="590" alt="image" src="https://user-images.githubusercontent.com/97837753/181688359-1528bbf7-43b1-4720-a388-6f1816139b47.png">
+
+<img width="644" alt="image" src="https://user-images.githubusercontent.com/97837753/181690969-d714ba7e-1921-4639-982d-e920acb5ae8c.png">
+
+
+<img width="538" alt="image" src="https://user-images.githubusercontent.com/97837753/181688672-ebb4470b-2541-4683-aa5f-d60c6004dccc.png">
+
+
+# **FUTURE ENHANCEMENT**
+
+- As future improvement, we can hug everything in a pipeline.
+- Move to a serverless architecture
+- Refactor the App to dynamically grab the EC2 instance IP address.
+- Add IP address to a Route 53 domain.
