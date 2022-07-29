@@ -41,16 +41,21 @@ This repository contains the necessary configuration for deploying a CI/CD pipel
 #add nodejs to yum
 #curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
 #yum install nodejs -y #default-jre ImageMagick
+
 #Install NVM package manager for manager separate versions of nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
+
 #Install node 14
 nvm install 14
+
 #install pm2 module globaly
 npm install -g pm2
 pm2 update
+
 #install nc utility
 yum install nc -y
+
 #delete existing bundle
 cd /home/ec2-user
 rm -rf backend
@@ -71,15 +76,18 @@ cd /home/ec2-user/frontend
 npm ci
 pm2 start "npm start"
 
-
 * validate.sh -> this script will validate whether the app is up on port 8080
+
 
 
 #!/usr/bin/env bash
 sleep 10
-#validating that the host is up on 8080
+# validating that the host is up on 8080
 nc -zv 127.0.0.1 8080
-
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
 
 **3.Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2.
 **
@@ -100,4 +108,5 @@ URL
 
 - As future improvement, we can hug everything in a pipeline.
 - Move to a serverless architecture
+- Refactor the App to dynamically grab the EC2 instance IP address.
 - Add IP address to a Route 53 domain.
