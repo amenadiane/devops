@@ -90,8 +90,8 @@ Footer
 Footer navigation
 Terms
 
-**3.Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2.
-**
+**3.Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2**
+
 
 #**VALIDATION**
 
