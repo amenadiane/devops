@@ -76,13 +76,14 @@ cd /home/ec2-user/frontend
 npm ci
 pm2 start "npm start"
 
+
 * validate.sh -> this script will validate whether the app is up on port 8080
 
 
 
 #!/usr/bin/env bash
 sleep 10
-# validating that the host is up on 8080
+#validating that the host is up on 8080
 nc -zv 127.0.0.1 8080
 Footer
 © 2022 GitHub, Inc.
