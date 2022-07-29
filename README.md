@@ -29,6 +29,7 @@ This repository contains the necessary configuration for deploying a CI/CD pipel
  
  sudo service codedeploy-agent status
  
+ 
  **2. Setup CODEDEPLOY for deploying our project onto our EC2 instance**
  
  Write an appspec.yml with all the instruction for deploying our code. We used three scripts to achieve our goal:
@@ -37,29 +38,27 @@ This repository contains the necessary configuration for deploying a CI/CD pipel
 * install.sh -> this script will install globally node and all the utilities needed
 
 
-  #add nodejs to yum
+#add nodejs to yum
 #curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
 #yum install nodejs -y #default-jre ImageMagick
 #Install NVM package manager for manager separate versions of nodejs
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
-
 #Install node 14
 nvm install 14
-
 #install pm2 module globaly
 npm install -g pm2
 pm2 update
-
 #install nc utility
 yum install nc -y
-
 #delete existing bundle
 cd /home/ec2-user
 rm -rf backend
 rm -rf fontend
 
+
 * run.sh -> this script will start the backend and frontend in the given order as the frontend depends on the backend
+
 
 
 #!/usr/bin/env bash
@@ -72,15 +71,18 @@ cd /home/ec2-user/frontend
 npm ci
 pm2 start "npm start"
 
+
 * validate.sh -> this script will validate whether the app is up on port 8080
+
 
 #!/usr/bin/env bash
 sleep 10
-
-# validating that the host is up on 8080
+#validating that the host is up on 8080
 nc -zv 127.0.0.1 8080
 
-**3.  Finally setup the CODEDEPLOY to deploy onto our EC2.**
+
+**3.  Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2.
+
 
 #**VALIDATION**
 
