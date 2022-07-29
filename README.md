@@ -81,8 +81,8 @@ sleep 10
 nc -zv 127.0.0.1 8080
 
 
-**3.  Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2.
-
+**3.Finally setup CODEPIPELINE to orchestrate the deployment by reaching out to CODEDEPLOY to deploy onto our EC2.
+**
 
 #**VALIDATION**
 
